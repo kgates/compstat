@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Graduate computational statistics course materials, R exercises, readings, and final project resources.">
+  <title>Introduction to Computational Statistics</title>
+  <style>
+:root {
+  color-scheme: light;
+  --ink: #172c3b;
+  --muted: #4c6270;
+  --paper: #f7f9fa;
+  --navy: #102d40;
+  --blue: #165674;
+  --line: #d8e2e7;
+  --mint: #abdccf;
+  font: 16px/1.6 "Inter", system-ui, sans-serif;
+  color: var(--ink);
+  background: var(--paper);
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; }
+h1, h2, h3, p, figure { margin: 0; }
+h1, h2 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -.035em; line-height: 1.05; }
+h1 { max-width: 14ch; font-size: clamp(2.75rem, 6.1vw, 5rem); }
+h2 { font-size: clamp(2rem, 4vw, 3rem); }
+h3 { font-size: 1.04rem; line-height: 1.35; }
+a { color: var(--blue); text-underline-offset: .19em; }
+a:hover { text-decoration-thickness: .14em; }
+:focus-visible { outline: 3px solid #22867d; outline-offset: 4px; }
+.container { width: min(1120px, calc(100% - 2.5rem)); margin-inline: auto; }
+.skip { position: absolute; z-index: 1; top: .65rem; left: .65rem; padding: .45rem .8rem; background: white; transform: translateY(-200%); }
+.skip:focus { transform: none; }
+.site-header { background: #fff; border-bottom: 1px solid var(--line); }
+.bar, nav, .actions { display: flex; align-items: center; flex-wrap: wrap; }
+.bar { justify-content: space-between; gap: .5rem 1.5rem; min-height: 66px; padding-block: .65rem; }
+nav { gap: .35rem 1.4rem; }
+nav a, .brand { color: var(--ink); text-decoration: none; }
+nav a { font-size: .9rem; font-weight: 550; }
+nav a:hover, .tile:hover strong { text-decoration: underline; }
+.brand { font-size: 1.06rem; font-weight: 760; white-space: nowrap; }
+.brand span { color: var(--muted); padding-left: .6rem; font-size: .78rem; font-weight: 500; }
+.hero { background: var(--navy); color: #fff; }
+.hero-grid { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); align-items: center; gap: 3rem; padding-block: clamp(3rem, 8vw, 6.5rem); }
+.eyebrow { color: var(--mint); font-size: .73rem; text-transform: uppercase; font-weight: 750; letter-spacing: .14em; margin-bottom: .95rem; }
+.intro { color: #d0dfe6; font-size: 1.08rem; max-width: 47ch; margin-top: 1.2rem; }
+.actions { margin-top: 1.75rem; gap: .75rem 1.35rem; }
+.actions a { color: white; }
+.button { background: var(--blue); border: 0; border-radius: 5px; color: white; cursor: pointer; display: inline-flex; justify-content: center; gap: .65rem; text-decoration: none; font: 650 .9rem/1.4 "Inter", system-ui, sans-serif; padding: .82rem 1rem; }
+.button:hover { background: #0e415b; }
+.actions .button { background: var(--mint); color: var(--navy); }
+.actions .button:hover { background: #d2efe7; }
+.plot { border: 1px solid #456071; border-radius: 10px; background: #173a4e; padding: clamp(.9rem, 3vw, 1.5rem); }
+canvas { display: block; width: 100%; height: auto; }
+figcaption { border-top: 1px solid #456071; padding-top: .7rem; margin-top: .4rem; color: #e1ebf0; font-size: .78rem; }
+figcaption span { display: block; color: #b2cbd7; }
+.content { padding-block: .65rem 3.5rem; }
+.section { padding-block: 2.4rem; border-bottom: 1px solid var(--line); scroll-margin-top: 1rem; }
+.section:last-child { border: 0; }
+.section-title { margin-bottom: 1.2rem; }
+.section-title p { color: var(--muted); margin-top: .55rem; max-width: 70ch; }
+.tiles, .modules { display: grid; gap: .85rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.tile, .module, .submission { background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: 1rem 1.2rem; }
+.tile { display: flex; flex-direction: column; color: var(--ink); text-decoration: none; gap: .15rem; }
+.tile span, .readings span, .submission p, #results { color: var(--muted); font-size: .87rem; }
+.filter { margin-bottom: 1rem; display: grid; grid-template-columns: minmax(0, 380px) auto; gap: .35rem .8rem; align-items: center; }
+.filter label { grid-column: 1 / -1; }
+label { display: block; font-weight: 650; font-size: .87rem; }
+input { width: 100%; min-width: 0; border: 1px solid #9cb0bd; border-radius: 5px; padding: .65rem .75rem; font: inherit; color: var(--ink); background: white; }
+.files { display: flex; gap: .35rem .65rem; flex-wrap: wrap; margin-top: .6rem; }
+.file { font-size: .87rem; display: inline-flex; align-items: baseline; gap: .4rem; }
+.file span { background: #edf4f6; border-radius: 3px; color: #3f5867; font-size: .65rem; padding: .02rem .3rem; font-weight: 700; }
+.readings { list-style: none; padding: 0; margin: 0; }
+.readings li { border-top: 1px solid var(--line); padding: .7rem 0; }
+.readings span { display: block; }
+.submission { max-width: 740px; }
+.submission-row { display: flex; flex-wrap: wrap; gap: .65rem; margin: .4rem 0 .7rem; }
+.submission-row input { flex: 1 1 260px; }
+.site-footer { border-top: 1px solid var(--line); font-size: .85rem; color: var(--muted); background: #fff; }
+@media (max-width: 750px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .plot { max-width: 440px; }
+}
+@media (max-width: 560px) {
+  .tiles, .modules, .filter { grid-template-columns: 1fr; }
+  nav { gap: .3rem .9rem; }
+}
+</style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="container bar">
+      <a class="brand" href="./">CompStat <span>Spring 2027</span></a>
+      <nav aria-label="Course navigation">
+        <a href="#syllabus">Syllabus</a><a href="#materials">Materials</a><a href="#readings">Readings</a><a href="#projects">Projects</a><a href="#submit">Submit work</a>
+      </nav>
+    </div>
+  </header>
+  <main id="main">
+    <div class="hero">
+      <div class="container hero-grid">
+        <div>
+          <p class="eyebrow">Graduate course Â· Spring 2027</p>
+          <h1>Introduction to Computational Statistics</h1>
+          <p class="intro">Work with data in R, explore statistical methods through simulation, and build reproducible analyses.</p>
+          <div class="actions"><a class="button" href="#materials">Browse course materials <span aria-hidden="true">â†“</span></a><a href="#syllabus">View syllabus</a></div>
+        </div>
+        <figure class="plot">
+          <canvas id="sampling-plot" width="676" height="340" role="img" aria-label="Simulated sampling distribution of the mean displayed as a histogram"></canvas>
+          <figcaption>Sampling distribution of the mean <span>Simulated in 1,200 samples</span></figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="container content">
+      <section id="syllabus" class="section">
+        <div class="section-title"><h2>Syllabus</h2><p>Course policies and the Spring 2027 schedule.</p></div>
+        <div class="tiles">
+          <div class="tile"><strong>Course syllabus</strong><span>Link forthcoming</span></div>
+          <div class="tile"><strong>Course schedule</strong><span>Link forthcoming</span></div>
+        </div>
+      </section>
+      <section id="materials" class="section">
+        <div class="section-title"><h2>Lectures &amp; exercises</h2><p>Lecture slides and in-class exercises will be posted by topic as they become available. The course schedule will list class dates.</p></div>
+        <div id="filter" class="filter" hidden>
+          <label for="search">Filter course materials</label>
+          <input id="search" type="search" placeholder="Search topics or files">
+          <span id="results" role="status"></span>
+        </div>
+        <div class="modules">
+<article class="module" id="intro-r"><h3>Introduction to R</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="data-prep"><h3>Indexing, lists, and data preparation</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="figures"><h3>Figures and visualization</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="simulations"><h3>Simulation studies</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="neural-networks"><h3>Neural networks</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="optimization"><h3>Optimization</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="multiple-comparisons"><h3>Multiple comparisons</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="bootstrapping"><h3>Bootstrapping</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="workflow"><h3>Workflow</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="reproducibility"><h3>Reproducibility and documentation</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="design-testing"><h3>Design and testing</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="efficiency"><h3>Writing efficient code</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="projects-packages"><h3>R projects and packages</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="debugging"><h3>Debugging</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="shiny"><h3>Shiny apps</h3><div class="files">Materials forthcoming</div></article>
+<article class="module" id="ethics"><h3>Ethics in computational statistics</h3><div class="files">Materials forthcoming</div></article>
+        </div>
+      </section>
+      <section id="readings" class="section">
+        <div class="section-title"><h2>Readings</h2><p>Articles referenced in the lecture materials.</p></div>
+        <ul class="readings">
+          <li><a href="https://doi.org/10.1016/j.neuroimage.2010.08.063">Network modelling methods for FMRI</a><span>Smith et al. Â· Simulation studies</span></li>
+          <li><a href="https://doi.org/10.1037/met0000192">Uncovering general, shared, and unique temporal patterns in ambulatory assessment data</a><span>Lane et al. Â· Simulation studies</span></li>
+          <li><a href="https://doi.org/10.1037/met0000374">Deep learning: A primer for psychologists</a><span>Urban &amp; Gates Â· Neural networks</span></li>
+        </ul>
+      </section>
+      <section id="projects" class="section">
+        <div class="section-title"><h2>Final projects</h2><p>Find the project requirements and browse posted pitch decks.</p></div>
+        <div class="tiles">
+          <div class="tile"><strong>Final project brief</strong><span>Link forthcoming</span></div>
+          <a class="tile" href="https://github.com/kgates/compstat/tree/main/docs/project-pitches"><strong>Project pitch slides</strong><span>PowerPoint files on GitHub â†—</span></a>
+        </div>
+      </section>
+      <section id="submit" class="section">
+        <div class="section-title"><h2>Submit work</h2><p>Accept the invitation to your private GitHub repository before submitting. Your instructor will provide the repository name.</p></div>
+        <form id="submission" class="submission" hidden>
+          <label for="repo-name">Private submission repository name</label>
+          <div class="submission-row">
+            <input id="repo-name" type="text" placeholder="compstat-submission-team-name" pattern="compstat-submission-[A-Za-z0-9][A-Za-z0-9_\-]{0,77}" required spellcheck="false" autocomplete="off" autocapitalize="none" aria-describedby="submission-help">
+            <button class="button" type="submit">Open GitHub uploader â†—</button>
+          </div>
+          <p id="submission-help">In GitHub, confirm your repository is marked Private. Upload your files, write a commit message, and select Commit changes. A commit in your repository records your submission.</p>
+        </form>
+        <noscript>Open your assigned private repository on GitHub and choose Add file, then Upload files.</noscript>
+      </section>
+    </div>
+  </main>
+  <footer class="site-footer"><div class="container bar"><span>Computational Statistics Â· Spring 2027</span><a href="https://github.com/kgates/compstat">Course repository â†—</a></div></footer>
+<script>
+const search = document.querySelector("#search");
+const results = document.querySelector("#results");
+const modules = [...document.querySelectorAll(".module")];
+
+search.addEventListener("input", () => {
+  const terms = search.value.toLowerCase().trim().split(/\s+/);
+  for (const module of modules) {
+    const text = module.textContent.toLowerCase();
+    module.hidden = !terms.every(term => text.includes(term));
+  }
+  const count = modules.filter(module => !module.hidden).length;
+  results.textContent = count === 1 ? "1 topic" : `${count} topics`;
+});
+document.querySelector("#filter").hidden = false;
+
+const form = document.querySelector("#submission");
+form.addEventListener("submit", event => {
+  event.preventDefault();
+  const repository = document.querySelector("#repo-name").value.trim();
+  window.location.href = `https://github.com/kgates/${encodeURIComponent(repository)}/upload/main`;
+});
+form.hidden = false;
+
+const canvas = document.querySelector("#sampling-plot");
+const context = canvas.getContext("2d");
+if (context) {
+  // Simulate the mean of 12 independent uniform observations.
+  let seed = 917;
+  const bins = Array(28).fill(0);
+  for (let sample = 0; sample < 1200; sample++) {
+    let total = 0;
+    for (let observation = 0; observation < 12; observation++) {
+      seed = (Math.imul(1664525, seed) + 1013904223) >>> 0;
+      total += seed / 4294967296;
+    }
+    const bin = Math.floor((total / 12) * bins.length);
+    bins[bin]++;
+  }
+
+  const left = 56;
+  const top = 34;
+  const width = 602;
+  const height = 236;
+  const baseline = top + height;
+  const ceiling = Math.ceil(Math.max(...bins) / 50) * 50;
+  context.font = "20px system-ui";
+  context.fillStyle = "#bfd6e0";
+  context.strokeStyle = "#4d6d7c";
+  context.lineWidth = 1;
+  context.textBaseline = "middle";
+  context.textAlign = "right";
+  for (let tick = 0; tick <= ceiling; tick += 50) {
+    const y = baseline - tick / ceiling * height;
+    context.beginPath();
+    context.moveTo(left, y);
+    context.lineTo(left + width, y);
+    context.stroke();
+    context.fillText(tick, left - 10, y);
+  }
+  context.fillStyle = "#abdccf";
+  const binWidth = width / bins.length;
+  bins.forEach((count, index) => {
+    const barHeight = count / ceiling * height;
+    context.fillRect(left + index * binWidth + 2, baseline - barHeight, binWidth - 4, barHeight);
+  });
+  context.fillStyle = "#bfd6e0";
+  context.textAlign = "center";
+  for (const tick of [0, 0.25, 0.5, 0.75, 1]) {
+    context.fillText(tick, left + tick * width, baseline + 24);
+  }
+  context.fillText("Sample mean", left + width / 2, baseline + 57);
+}
+</script>
+</body>
+</html>
